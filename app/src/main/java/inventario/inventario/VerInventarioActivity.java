@@ -1,18 +1,13 @@
 package inventario.inventario;
 
-import android.content.Context;
+
 import android.database.Cursor;
-import android.database.SQLException;
+
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
-import android.inputmethodservice.Keyboard;
-import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.GridView;
 
 import android.widget.Toast;
@@ -35,6 +30,8 @@ public class VerInventarioActivity extends AppCompatActivity {
 
             GridView invent = (GridView) findViewById(R.id.gvInv);
 
+
+
             List<String> listaInv = new ArrayList<>();
             ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, listaInv);
             dataAdapter.setDropDownViewResource(R.layout.activity_ver_inventario);
@@ -56,9 +53,8 @@ public class VerInventarioActivity extends AppCompatActivity {
                         listaInv.add(cantidad);
                         listaInv.add(intSent);
 
-
-
                     invent.setAdapter(dataAdapter);
+
                 }while (c.moveToNext());
             }else{
                 Toast.makeText(getApplicationContext(), "No hay registros para mostrar", Toast.LENGTH_LONG).show();

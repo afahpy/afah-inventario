@@ -50,7 +50,7 @@ public class CargaInvActivity extends AppCompatActivity {
         codArt.setEnabled(false);
 
 
-        final ConnectDB connectDB = new ConnectDB(getApplicationContext());
+
 
 
         btnSave.setOnClickListener(new View.OnClickListener() {
@@ -71,8 +71,10 @@ public class CargaInvActivity extends AppCompatActivity {
                 }
 
                 try {
+                    final ConnectDB connectDB = new ConnectDB(getApplicationContext());
 
                     SQLiteDatabase db = connectDB.getWritableDatabase();
+
                     ContentValues valores = new ContentValues();
                     valores.put(ConnectDB.datos.ID_ARTICULO, codArt.getText().toString());
                     valores.put(ConnectDB.datos.COD_BARRA, codBarra.getText().toString());
@@ -96,6 +98,8 @@ public class CargaInvActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
+                final ConnectDB connectDB = new ConnectDB(getApplicationContext());
+
                 SQLiteDatabase db = connectDB.getReadableDatabase();
 
                 String[] argsel = {buscarCod.getText().toString()};
@@ -149,6 +153,7 @@ public class CargaInvActivity extends AppCompatActivity {
         final ConnectDB connectDB = new ConnectDB(getApplicationContext());
 
         SQLiteDatabase db = connectDB.getReadableDatabase();
+
             String idArt=codArt.getText().toString();
             Cursor c= db.rawQuery("select "+ ConnectDB.datos.ID_ARTICULO+ " from " + ConnectDB.datos.TABLE_INVENTARIO+ " where "+ ConnectDB.datos.ID_ARTICULO+ "=" + idArt, null);
         if(c.moveToFirst()){
