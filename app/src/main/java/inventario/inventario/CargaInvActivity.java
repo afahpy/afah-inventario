@@ -1,30 +1,55 @@
 package inventario.inventario;
 
+import android.app.Activity;
+
 import android.content.ContentValues;
 import android.content.Context;
+
+import android.content.Intent;
 import android.database.Cursor;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
+
+import android.view.ViewGroup.LayoutParams;
+import java.util.ArrayList;
 
 
 public class CargaInvActivity extends AppCompatActivity {
 
-    EditText codArt;
-    EditText codBarra;
+
+
+
+    EditText cod_marca;
+    EditText cod_original;
+    EditText cod_proveedor;
+    EditText cod_barra;
+    EditText descr;
     EditText cantidad;
     EditText ubicacion;
-    EditText descr;
-    EditText buscarCod;
-    Button btnSave;
+    EditText id_Articulo;
+
+    Button btnSearchMarca;
+    Button btnSearchOriginal;
+    Button btnSearchProveedor;
+    Button btnSearchCodBarra;
+
     Button btnCancel;
-    Button search;
+    Button btnSave;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,21 +58,37 @@ public class CargaInvActivity extends AppCompatActivity {
         this.setTitle("Carga de Inventario");
 
 
+
+
+
         btnSave = (Button) findViewById(R.id.boton_aceptar);
         btnCancel = (Button) findViewById(R.id.boton_cancelar);
-        search = (Button) findViewById(R.id.btnSearch);
+        btnSearchMarca = (Button) findViewById(R.id.btnMarca);
+        btnSearchOriginal = (Button) findViewById(R.id.btnOriginal);
+        btnSearchProveedor = (Button) findViewById(R.id.btnProveedor);
+        btnSearchCodBarra = (Button) findViewById(R.id.btnBarra);
         btnSave = (Button) findViewById(R.id.boton_aceptar);
-        codArt = (EditText) findViewById(R.id.idArt);
-        codBarra = (EditText) findViewById(R.id.codBarra);
-        cantidad = (EditText) findViewById(R.id.cantidad);
-        descr = (EditText) findViewById(R.id.desc);
-        ubicacion = (EditText) findViewById(R.id.ubi);
-        buscarCod = (EditText) findViewById(R.id.searchId);
 
-        descr.setFocusable(false);
-        descr.setEnabled(false);
-       codArt.setFocusable(false);
-        codArt.setEnabled(false);
+
+        cod_marca = (EditText) findViewById(R.id.marca);
+        cod_original = (EditText) findViewById(R.id.original);
+        cod_proveedor = (EditText) findViewById(R.id.proveedor);
+        cod_barra = (EditText) findViewById(R.id.codBarra);
+        id_Articulo = (EditText) findViewById(R.id.idArt);
+        descr = (EditText) findViewById(R.id.desc);
+        cantidad = (EditText) findViewById(R.id.cantidad);
+        ubicacion = (EditText) findViewById(R.id.ubi);
+
+
+
+        id_Articulo.setText(String.valueOf(getIntent().getIntExtra("id",0)));
+        cod_marca.setText(getIntent().getStringExtra("cod_marca"));
+        cod_barra.setText(getIntent().getStringExtra("cod_barra"));
+        cod_original.setText(getIntent().getStringExtra("cod_original"));
+        cod_proveedor.setText(getIntent().getStringExtra("cod_proveedor"));
+        descr.setText(getIntent().getStringExtra("descripcion"));
+
+
 
 
 
@@ -59,16 +100,17 @@ public class CargaInvActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (!validarDatos()) {
-                    Toast.makeText(getApplicationContext(), "Error de Datos, verifique", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Error, Cantidad y/o Ubicacion estan vacios o no ha seleccionado el Articulo a Inventariar", Toast.LENGTH_LONG).show();
                     return;
                 }
 
-                if(!validarIdArt()){
+               if(!validarCarga()){
 
                     Toast.makeText(getApplicationContext(), "El Articulo ya fue inventariado", Toast.LENGTH_LONG).show();
                     clean();
                     return;
                 }
+
 
                 try {
                     final ConnectDB connectDB = new ConnectDB(getApplicationContext());
@@ -76,8 +118,9 @@ public class CargaInvActivity extends AppCompatActivity {
                     SQLiteDatabase db = connectDB.getWritableDatabase();
 
                     ContentValues valores = new ContentValues();
-                    valores.put(ConnectDB.datos.ID_ARTICULO, codArt.getText().toString());
-                    valores.put(ConnectDB.datos.COD_BARRA, codBarra.getText().toString());
+                    valores.put(ConnectDB.datos.ID_ARTICULO, id_Articulo.getText().toString());
+                    valores.put(ConnectDB.datos.COD_MARCA,cod_marca.getText().toString());
+                    valores.put(ConnectDB.datos.COD_BARRA, cod_barra.getText().toString());
                     valores.put(ConnectDB.datos.CANTIDAD, cantidad.getText().toString());
                     valores.put(ConnectDB.datos.UBICACION, ubicacion.getText().toString());
                     valores.put(ConnectDB.datos.INV_SENT, "0");
@@ -93,38 +136,101 @@ public class CargaInvActivity extends AppCompatActivity {
 
         });
 
-
-        search.setOnClickListener(new View.OnClickListener() {
+        btnSearchMarca. setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                final ConnectDB connectDB = new ConnectDB(getApplicationContext());
 
-                SQLiteDatabase db = connectDB.getReadableDatabase();
-
-                String[] argsel = {buscarCod.getText().toString()};
-                String[] projection = {ConnectDB.datos.COD_ARTICULO, ConnectDB.datos.DESCRIPCION};
-                Cursor c = db.query(ConnectDB.datos.TABLE_ARTICULO, projection, ConnectDB.datos.COD_ORIGINAL + "=?", argsel, null, null, null);
-
-                if (c.moveToFirst()) {
-                    do {
-                        codArt.setText(c.getString(0));
-                        descr.setText(c.getString(1));
-                        codBarra.requestFocus();
-
-                    }
-                    while (c.moveToNext());
-
-
-                } else {
-                    Toast toast1 = Toast.makeText(getApplicationContext(), "No existe ese Articulo", Toast.LENGTH_SHORT);
-                    toast1.show();
-                    buscarCod.setText("");
-                    buscarCod.requestFocus();
+                if(!cod_marca.getText().toString().trim().isEmpty()) {
+                    Intent intent = new Intent(CargaInvActivity.this, ConsultaArticulo.class);
+                    CargaInvActivity.this.finish();
+                    String query = "SELECT  *  FROM " + ConnectDB.datos.TABLE_ARTICULO + " WHERE " + ConnectDB.datos.CODIGO_MARCA + " LIKE '" + cod_marca.getText().toString() + "%'";
+                    intent.putExtra("query", query);
+                    startActivity(intent);
+                    cod_marca.setText("");
                 }
+                else{
+                        Toast.makeText(getApplicationContext(),"Codigo Marca Vacio",Toast.LENGTH_SHORT).show();
+                    }
+
+
             }
 
         });
+        btnSearchOriginal. setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                if(!cod_original.getText().toString().trim().isEmpty()) {
+
+                    Intent intent = new Intent(CargaInvActivity.this, ConsultaArticulo.class);
+                    CargaInvActivity.this.finish();
+                    String query = "SELECT  *  FROM " + ConnectDB.datos.TABLE_ARTICULO + " WHERE " + ConnectDB.datos.COD_ORIGINAL + " LIKE '" + cod_original.getText().toString() + "%'";
+                    intent.putExtra("query", query);
+                    startActivity(intent);
+                    cod_original.setText("");
+                }else{
+                    Toast.makeText(getApplicationContext(),"Cod Original Vacio",Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+
+
+
+        });
+
+        btnSearchProveedor. setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                if(!cod_proveedor.getText().toString().trim().isEmpty()) {
+                    Intent intent = new Intent(CargaInvActivity.this, ConsultaArticulo.class);
+                    CargaInvActivity.this.finish();
+                    String query = "SELECT  *  FROM " + ConnectDB.datos.TABLE_ARTICULO + " WHERE " + ConnectDB.datos.COD_PROVEEDOR + " LIKE '" + cod_proveedor.getText().toString() + "%'";
+                    intent.putExtra("query", query);
+                    startActivity(intent);
+                    cod_proveedor.setText("");
+                }else{
+                    Toast.makeText(getApplicationContext(),"Cod Proveedor Vacio",Toast.LENGTH_SHORT).show();
+                }
+
+
+            }
+
+
+
+
+        });
+
+        btnSearchCodBarra. setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                if(!cod_barra.getText().toString().trim().isEmpty()) {
+                Intent intent = new Intent(CargaInvActivity.this, ConsultaArticulo.class);
+                    CargaInvActivity.this.finish();
+                String query = "SELECT  *  FROM " + ConnectDB.datos.TABLE_ARTICULO + " WHERE " + ConnectDB.datos.CODIGO_BARRA + " LIKE '" + cod_barra.getText().toString() + "%'";
+                intent.putExtra("query", query);
+                startActivity(intent);
+                    cod_barra.setText("");
+            } else{
+                    Toast.makeText(getApplicationContext(),"Cod Barra vacio",Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+
+
+
+        });
+
+
+
+
+
 
         btnCancel.setOnClickListener(new View.OnClickListener() {
 
@@ -138,9 +244,9 @@ public class CargaInvActivity extends AppCompatActivity {
 
     public boolean validarDatos() {
         boolean out = true;
-        // campos obligatorios..
-        if (codArt.getText().toString().trim().isEmpty() || codBarra.getText().toString().trim().isEmpty() ||
-                cantidad.getText().toString().trim().isEmpty() || ubicacion.getText().toString().trim().isEmpty()) {
+        // campos obligatorios.
+
+        if (cantidad.getText().toString().trim().isEmpty() || ubicacion.getText().toString().trim().isEmpty() || id_Articulo.getText().toString().equals("0") || id_Articulo.getText().toString().trim().isEmpty()) {
             out = false;
         }
 
@@ -148,37 +254,47 @@ public class CargaInvActivity extends AppCompatActivity {
         return out;
     }
 
-    public boolean validarIdArt() {
-        boolean out1=true;
+    public boolean validarCarga() {
+        boolean out1 = true;
         final ConnectDB connectDB = new ConnectDB(getApplicationContext());
 
         SQLiteDatabase db = connectDB.getReadableDatabase();
 
-            String idArt=codArt.getText().toString();
-            Cursor c= db.rawQuery("select "+ ConnectDB.datos.ID_ARTICULO+ " from " + ConnectDB.datos.TABLE_INVENTARIO+ " where "+ ConnectDB.datos.ID_ARTICULO+ "=" + idArt, null);
-        if(c.moveToFirst()){
-            String idArt1=c.getString(0);
-        if(idArt.equals(idArt1)) {
 
-            out1 =false;
+        String idArt = id_Articulo.getText().toString();
+        String ubi = ubicacion.getText().toString();
+        Cursor c = db.rawQuery("select " + ConnectDB.datos.ID_ARTICULO + ", " + ConnectDB.datos.UBICACION + " from " + ConnectDB.datos.TABLE_INVENTARIO + " where " + ConnectDB.datos.ID_ARTICULO + " = '" + idArt + "' AND " + ConnectDB.datos.UBICACION + " = '" + ubi + "'", null);
+        if (c.moveToFirst()) {
+
+            String idArt1 = c.getString(0);
+            String ubic = c.getString(1);
+            if (idArt.equals(idArt1) && ubi.equals(ubic)) {
+
+                out1 = false;
+            }
         }
+            return out1;
         }
-
-        return out1;
-    }
-
 
 
 
     public void clean() {
-        buscarCod.setText("");
+        cod_marca.setText("");
+        cod_original.setText("");
+        cod_proveedor.setText("");
+        cod_barra.setText("");
         descr.setText("");
-        codArt.setText("");
-        codBarra.setText("");
         cantidad.setText("");
         ubicacion.setText("");
-        buscarCod.requestFocus();
+        id_Articulo.setText("");
     }
 
-        }
+
+
+
+
+
+
+    }
+
 

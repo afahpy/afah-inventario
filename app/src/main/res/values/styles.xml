@@ -15,6 +15,45 @@
         <item name="android:background">@color/colorPrimary</item>
     </style>
 
+  <style name="LinearLayoutHorizontal" parent="LinearLayoutHorizontal">
+      <item name="android:layout_width">match_parent</item>
+      <item name="android:layout_height">wrap_content</item>
+      <item name="android:gravity">center_vertical</item>
+      <item name="android:orientation">horizontal</item>
+  </style>
+
+    <style name="TextInputLayout" parent="TextInputLayout">
+        <item name="android:layout_height">50dp</item>
+        <item name="android:layout_width">250dp</item>
+
+    </style>
+
+    <style name="BtnMenu" parent="BtnMenu">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_margin">20dp</item>
+        <item name="android:background">@drawable/button_style</item>
+        <item name="android:textColor">@color/colorAccent</item>
+
+
+    </style>
+
+    <style name="EditText" parent="EditText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">16dp</item>
+        <item name="android:textColor">@color/Black</item>
+    </style>
+
+    <style name="BtnSearch" parent="BtnSearch">
+
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:drawableLeft">@drawable/ic_action_search</item>
+        <item name="android:layout_weight">1</item>
+    </style>
+
 
     <style name="Hint" parent="TextAppearance.Design.Hint">
         <item name="android:textColor">?attr/colorAccent</item>

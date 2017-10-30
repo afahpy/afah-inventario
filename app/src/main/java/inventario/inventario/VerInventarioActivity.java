@@ -1,21 +1,30 @@
 package inventario.inventario;
 
 
+import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
-import android.widget.GridView;
-
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
-
 import java.util.ArrayList;
-import java.util.List;
+
 
 public class VerInventarioActivity extends AppCompatActivity {
+
+    ArrayList<Inventario> listaInv;
+    RecyclerView recyclerInv;
+    Context context;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,50 +32,60 @@ public class VerInventarioActivity extends AppCompatActivity {
         setContentView(R.layout.activity_ver_inventario);
         this.setTitle("Vista de Inventario");
 
-       try {
 
-        final ConnectDB connectDB = new ConnectDB(getApplicationContext());
-        SQLiteDatabase db = connectDB.getReadableDatabase();
+        listaInv = new ArrayList<>();
+        recyclerInv = (RecyclerView) findViewById(R.id.invRecycler);
+        recyclerInv.setLayoutManager(new LinearLayoutManager(this));
+        consulta();
 
-            GridView invent = (GridView) findViewById(R.id.gvInv);
+        ListaInvAdapter adapter = new ListaInvAdapter(listaInv,this,context);
+        recyclerInv.setAdapter(adapter);
 
 
 
-            List<String> listaInv = new ArrayList<>();
-            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, listaInv);
-            dataAdapter.setDropDownViewResource(R.layout.activity_ver_inventario);
-            String query = "SELECT  * FROM " + ConnectDB.datos.TABLE_INVENTARIO + " WHERE " + ConnectDB.datos.INV_SENT + " =0";
-            Cursor c = db.rawQuery(query, null);
 
-            if(c!=null){
-                if(c.moveToFirst()){
-                    do{
 
-                        String idInv=c.getString(c.getColumnIndex(ConnectDB.datos.COD_INVENTARIO));
-                        String idArt=c.getString(c.getColumnIndex(ConnectDB.datos.ID_ARTICULO));
-                        String cantidad=c.getString(c.getColumnIndex(ConnectDB.datos.CANTIDAD));
-
-                        String intSent=c.getString(c.getColumnIndex(ConnectDB.datos.INV_SENT));
-
-                        listaInv.add(idInv);
-                        listaInv.add(idArt);
-                        listaInv.add(cantidad);
-                        listaInv.add(intSent);
-
-                    invent.setAdapter(dataAdapter);
-
-                }while (c.moveToNext());
-            }else{
-                Toast.makeText(getApplicationContext(), "No hay registros para mostrar", Toast.LENGTH_LONG).show();
-            }
-        }
-        c.close();
-        db.close();
-    }catch (Exception e){
-        Toast.makeText(getApplicationContext(),"Error al mostrar Registros", Toast.LENGTH_SHORT).show();
     }
 
+    private void consulta() {
+
+        try {
+            final ConnectDB connectDB = new ConnectDB(getApplicationContext());
+            SQLiteDatabase db = connectDB.getReadableDatabase();
+
+            Inventario inventario = null;
+            String query = "SELECT  * FROM " + ConnectDB.datos.TABLE_INVENTARIO + " ORDER BY " + ConnectDB.datos.COD_INVENTARIO + " DESC";
+            Cursor c = db.rawQuery(query, null);
+            if (c != null) {
+                if (c.moveToFirst()) {
+                    do {
+
+                        inventario = new Inventario();
+
+                        inventario.setId(c.getInt(0));
+                        inventario.setId_articulo(c.getInt(1));
+                        inventario.setCod_marca(c.getString(2));
+                        inventario.setCod_barra(c.getString(3));
+                        inventario.setCantidad(c.getInt(4));
+                        inventario.setUbicacion(c.getString(5));
+                        inventario.setInv_sent(c.getInt(6));
+
+                        listaInv.add(inventario);
+                    } while (c.moveToNext());
+                } else {
+                    Toast.makeText(getApplicationContext(), "No hay registros para mostrar", Toast.LENGTH_LONG).show();
+                }
+            }
+            c.close();
+            db.close();
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), "Error al mostrar Registros", Toast.LENGTH_SHORT).show();
+
         }
+
+
+    }
+
 
 
 }

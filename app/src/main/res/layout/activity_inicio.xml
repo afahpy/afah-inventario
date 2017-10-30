@@ -7,7 +7,6 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:background="#7986CB"
     tools:context="inventario.inventario.InicioActivity">
 
     <LinearLayout
@@ -20,42 +19,31 @@
 
         <Button
             android:id="@+id/CargaInv"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:backgroundTint="@color/colorPrimary"
             android:text="Cargar Inventario"
-            android:layout_margin="20dp"
-            android:textColor="@android:color/white"
             android:onClick="carga"
             android:drawableLeft="@drawable/ic_action_new"
-            android:background="@drawable/button_style"/>
+            style="@style/BtnMenu"/>
 
         <Button
-            android:layout_width="match_parent"
             android:id="@+id/ViewInven"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:backgroundTint="@color/colorPrimary"
             android:text="Ver Inventario"
-            android:layout_margin="20dp"
-            android:textColor="@android:color/white"
             android:onClick="viewInve"
-            android:background="@drawable/button_style"
-            android:drawableLeft="@drawable/ic_action_view_as_list"/>
+            android:drawableLeft="@drawable/ic_action_view_as_list"
+            style="@style/BtnMenu"/>
 
 
         <Button
-            android:layout_width="match_parent"
             android:id="@+id/Send_Serv"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_margin="20dp"
-            android:backgroundTint="@color/colorPrimary"
             android:text="Enviar al Servidor"
-            android:textColor="@android:color/white"
-            android:drawableLeft="@drawable/ic_action_send_now"
-            android:background="@drawable/button_style"/>
+            style="@style/BtnMenu"
+            android:drawableLeft="@drawable/ic_action_send"/>
+
+
+        <Button
+            android:id="@+id/Recibir_Serv"
+            android:text="Recibir del Servidor"
+            android:drawableLeft="@drawable/ic_action_send_"
+            style="@style/BtnMenu"/>
 
 
 
