@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,6 +36,7 @@ public class CargaInvActivity extends AppCompatActivity {
     EditText cod_marca;
     EditText cod_original;
     EditText cod_proveedor;
+    EditText cod_barra_search;
     EditText cod_barra;
     EditText descr;
     EditText cantidad;
@@ -59,8 +61,6 @@ public class CargaInvActivity extends AppCompatActivity {
 
 
 
-
-
         btnSave = (Button) findViewById(R.id.boton_aceptar);
         btnCancel = (Button) findViewById(R.id.boton_cancelar);
         btnSearchMarca = (Button) findViewById(R.id.btnMarca);
@@ -73,24 +73,27 @@ public class CargaInvActivity extends AppCompatActivity {
         cod_marca = (EditText) findViewById(R.id.marca);
         cod_original = (EditText) findViewById(R.id.original);
         cod_proveedor = (EditText) findViewById(R.id.proveedor);
-        cod_barra = (EditText) findViewById(R.id.codBarra);
+        cod_barra_search = (EditText) findViewById(R.id.codBarra);
         id_Articulo = (EditText) findViewById(R.id.idArt);
         descr = (EditText) findViewById(R.id.desc);
         cantidad = (EditText) findViewById(R.id.cantidad);
         ubicacion = (EditText) findViewById(R.id.ubi);
+        cod_barra = (EditText) findViewById(R.id.cBarra);
+
+        descr.setInputType(InputType.TYPE_NULL);
 
 
 
         id_Articulo.setText(String.valueOf(getIntent().getIntExtra("id",0)));
         cod_marca.setText(getIntent().getStringExtra("cod_marca"));
-        cod_barra.setText(getIntent().getStringExtra("cod_barra"));
+        cod_barra_search.setText(getIntent().getStringExtra("cod_barra"));
         cod_original.setText(getIntent().getStringExtra("cod_original"));
         cod_proveedor.setText(getIntent().getStringExtra("cod_proveedor"));
         descr.setText(getIntent().getStringExtra("descripcion"));
+        cod_barra.setText(getIntent().getStringExtra("cod_barra"));
 
 
-
-
+        focus();
 
 
 
@@ -209,13 +212,13 @@ public class CargaInvActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if(!cod_barra.getText().toString().trim().isEmpty()) {
+                if(!cod_barra_search.getText().toString().trim().isEmpty()) {
                 Intent intent = new Intent(CargaInvActivity.this, ConsultaArticulo.class);
                     CargaInvActivity.this.finish();
-                String query = "SELECT  *  FROM " + ConnectDB.datos.TABLE_ARTICULO + " WHERE " + ConnectDB.datos.CODIGO_BARRA + " LIKE '" + cod_barra.getText().toString() + "%'";
+                String query = "SELECT  *  FROM " + ConnectDB.datos.TABLE_ARTICULO + " WHERE " + ConnectDB.datos.CODIGO_BARRA + " LIKE '" + cod_barra_search.getText().toString() + "%'";
                 intent.putExtra("query", query);
                 startActivity(intent);
-                    cod_barra.setText("");
+                    cod_barra_search.setText("");
             } else{
                     Toast.makeText(getApplicationContext(),"Cod Barra vacio",Toast.LENGTH_SHORT).show();
                 }
@@ -282,19 +285,21 @@ public class CargaInvActivity extends AppCompatActivity {
         cod_marca.setText("");
         cod_original.setText("");
         cod_proveedor.setText("");
-        cod_barra.setText("");
+        cod_barra_search.setText("");
         descr.setText("");
+        cod_barra.setText("");
         cantidad.setText("");
         ubicacion.setText("");
         id_Articulo.setText("");
+        cod_marca.requestFocus();
     }
+public void focus(){
+
+    if(!id_Articulo.getText().toString().trim().isEmpty() && !descr.getText().toString().trim().isEmpty()){
+    cantidad.requestFocus();
+}
 
 
-
-
-
-
-
-    }
+    }}
 
 

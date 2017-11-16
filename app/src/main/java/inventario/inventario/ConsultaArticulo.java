@@ -61,7 +61,6 @@ public class ConsultaArticulo extends AppCompatActivity {
             Bundle parametro=this.getIntent().getExtras();
 
             String query= parametro.getString("query");
-            String cant =parametro.getString("cantidad");
 
             Cursor cursor = db.rawQuery(query, null);
 
