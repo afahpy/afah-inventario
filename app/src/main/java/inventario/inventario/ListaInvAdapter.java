@@ -50,6 +50,7 @@ public class ListaInvAdapter extends RecyclerView.Adapter<ListaInvAdapter.Invent
 
         holder.idInv.setText(String.valueOf(listaInv.get(position).getId()));
         holder.idArt.setText(String.valueOf(listaInv.get(position).getId_articulo()));
+        holder.desc.setText(listaInv.get(position).getDescripcion());
         holder.codMarca.setText(listaInv.get(position).getCod_marca());
         holder.codBarra.setText(listaInv.get(position).getCod_barra());
         holder.cant.setText(String.valueOf(listaInv.get(position).getCantidad()));
@@ -67,7 +68,7 @@ public class ListaInvAdapter extends RecyclerView.Adapter<ListaInvAdapter.Invent
 
     public class InventViewHolder extends RecyclerView.ViewHolder {
 
-        TextView idInv, idArt, codMarca, codBarra, cant, ub, sent;
+        TextView idInv, idArt, codMarca, codBarra, cant, ub, sent, desc;
         Button btndelete;
         ArrayList<Inventario> listaInv = new ArrayList<Inventario>();
         Activity activity;
@@ -85,6 +86,7 @@ public class ListaInvAdapter extends RecyclerView.Adapter<ListaInvAdapter.Invent
             cant = (TextView) itemView.findViewById(R.id.cantidad);
             ub = (TextView) itemView.findViewById(R.id.ubicacion);
             sent = (TextView) itemView.findViewById(R.id.st);
+            desc= (TextView) itemView.findViewById(R.id.descripcion);
             btndelete = (Button) itemView.findViewById(R.id.btnDelete);
 
 

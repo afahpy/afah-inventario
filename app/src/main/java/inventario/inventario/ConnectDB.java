@@ -36,6 +36,7 @@ public class ConnectDB extends SQLiteAssetHelper {
       public static final String CANTIDAD = "cantidad";
       public static final String UBICACION = "ubicacion";
       public static final String INV_SENT = "inv_sent";
+       public static final String DESC_INV= "descripcion";
 
 
       private static final String DB_NAME = "inventario.db";

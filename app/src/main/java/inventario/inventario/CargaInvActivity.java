@@ -127,6 +127,7 @@ public class CargaInvActivity extends AppCompatActivity {
                     valores.put(ConnectDB.datos.CANTIDAD, cantidad.getText().toString());
                     valores.put(ConnectDB.datos.UBICACION, ubicacion.getText().toString());
                     valores.put(ConnectDB.datos.INV_SENT, "0");
+                    valores.put(ConnectDB.datos.DESC_INV, descr.getText().toString());
 
                     Long idGuardado = db.insert(ConnectDB.datos.TABLE_INVENTARIO, ConnectDB.datos.COD_INVENTARIO, valores);
                     Toast.makeText(getApplicationContext(), "Se guardo exitosamente el registro: " + idGuardado, Toast.LENGTH_LONG).show();

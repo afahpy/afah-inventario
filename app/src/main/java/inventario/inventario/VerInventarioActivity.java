@@ -64,11 +64,13 @@ public class VerInventarioActivity extends AppCompatActivity {
 
                         inventario.setId(c.getInt(0));
                         inventario.setId_articulo(c.getInt(1));
-                        inventario.setCod_marca(c.getString(2));
-                        inventario.setCod_barra(c.getString(3));
-                        inventario.setCantidad(c.getInt(4));
-                        inventario.setUbicacion(c.getString(5));
-                        inventario.setInv_sent(c.getInt(6));
+                        inventario.setDescripcion(c.getString(2));
+                        inventario.setCod_marca(c.getString(3));
+                        inventario.setCod_barra(c.getString(4));
+                        inventario.setCantidad(c.getInt(5));
+                        inventario.setUbicacion(c.getString(6));
+                        inventario.setInv_sent(c.getInt(7));
+
 
                         listaInv.add(inventario);
                     } while (c.moveToNext());

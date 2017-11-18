@@ -13,6 +13,9 @@ public class Inventario {
     int cantidad;
     String ubicacion;
     int inv_sent;
+    String descripcion;
+
+
 
     public Inventario() {
         this.id = id;
@@ -22,6 +25,8 @@ public class Inventario {
         this.cantidad = cantidad;
         this.ubicacion = ubicacion;
         this.inv_sent = inv_sent;
+        this.descripcion = descripcion;
+
     }
 
     public int getId() {
@@ -78,5 +83,12 @@ public class Inventario {
 
     public void setInv_sent(int inv_sent) {
         this.inv_sent = inv_sent;
+    }
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 }
